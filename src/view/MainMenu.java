@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 // public class MainMenu extends JFrame implements GameListener{
 public class MainMenu extends JFrame {
     private JLayeredPane mainLayer;
+    private JLabel background;
     private JLabel newGameLabel;
     private JLabel highscoreLabel;
     private JLabel exitLabel;
@@ -34,7 +35,7 @@ public class MainMenu extends JFrame {
         mainLayer = new JLayeredPane();
 
         try {
-            JLabel background = new JLabel(new ImageIcon(ImageIO.read(new File("resources\\images\\menuPanelBackground.png"))));
+            background = new JLabel(new ImageIcon(ImageIO.read(new File("resources\\images\\menuPanelBackground.png"))));
             background.setBounds(0, 0, 800, 600);
             mainLayer.add(background, Integer.valueOf(0));
         } catch (IOException e) {
