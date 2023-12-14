@@ -156,10 +156,11 @@ public class Register extends JFrame {
             private int getUserId(String username, String password, String Confirm) {
                 try {
                     Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
-                    String query = "SELECT id FROM user WHERE username = ? AND password = ?";
+                    String query = "SELECT id FROM user WHERE username = ? AND password = ? AND Confirm = ?";
                     try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                         preparedStatement.setString(1, username);
                         preparedStatement.setString(2, password);
+                        preparedStatement.setString(3, Confirm);
             
                         try (ResultSet resultSet = preparedStatement.executeQuery()) {
                             return resultSet.next() ? resultSet.getInt("id") : -1;
