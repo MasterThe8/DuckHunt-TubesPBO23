@@ -180,7 +180,7 @@ public class Login extends JFrame {
 
             private void runMainMenu(){
                 Login.this.dispose();
-                MainMenu app = new MainMenu();
+                MainFrame app = new MainFrame();
                 app.setVisible(true);
             }
         });

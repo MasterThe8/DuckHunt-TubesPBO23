@@ -1,5 +1,7 @@
 package src.controller;
 
 public interface GameListener {
-    void gameIsFinished();
+    void startGame();
+    void endGame();
+    void onScoreChanged(int newScore);
 }
