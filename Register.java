@@ -1,232 +1,235 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package view;
+package src.view;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.sql.*;
+import src.controller.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class Register extends javax.swing.JFrame {
-    private static final String MYSQL_JDBC_DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
-    private static final String MYSQL_DB_URL = "jdbc:mysql://localhost:3306/my_uat";
-    private static final String MYSQL_DB_USER = "root";
-    private static final String MYSQL_DB_USER_PASSWORD = "";
+public class Register extends JFrame {
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/duckhunt_db";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "";
+    private JLayeredPane mainLayer;
+    private JLabel background;
+    private JLabel titleLabel;
+    private JLabel usernameLabel;
+    private JTextField usernameField;
+    private JLabel passwordLabel;
+    private JPasswordField passwordField;
+    private JLabel conPassLabel;
+    private JPasswordField conPassField;
+    private JButton registerBtn;
+    private JLabel noAccLabel;
+    private JLabel signInLabel;
+    public Register(){
+        initFrame();
+        addListeners();
+    }
+    private void initFrame(){
+        this.setTitle("Duck Hunt");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        this.setSize(new Dimension(800, 600));
+        this.setLocationRelativeTo(null);
 
-    /**
-     * Creates new form regis
-     */
-    public Register() {
-        initComponents();
+        mainLayer = new JLayeredPane();
+        titleLabel = new JLabel();
+        usernameLabel = new JLabel();
+        usernameField = new JTextField();
+        passwordLabel = new JLabel();
+        passwordField = new JPasswordField();
+        conPassLabel = new JLabel();
+        conPassField = new JPasswordField();
+        registerBtn = new JButton();
+        noAccLabel = new JLabel();
+        signInLabel = new JLabel();
+
+        try {
+            background = new JLabel(new ImageIcon(ImageIO.read(new File("resources\\images\\subPanelBackground.png"))));
+            background.setBounds(0, 0, 800, 600);
+            mainLayer.add(background, Integer.valueOf(0));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Font headFont = CustomFont.loadFont(32);
+        Font customFont = CustomFont.loadFont(14);
+        Font buttonFont = CustomFont.loadFont(20);
+        Font textFont = CustomFont.loadFont(10);
+
+        titleLabel.setText("Register");
+        usernameLabel.setText("Username");
+        passwordLabel.setText("Password");
+        conPassLabel.setText("Confirm Password");
+        registerBtn.setText("Register");
+        noAccLabel.setText("or");
+        signInLabel.setText("Sign In");
+
+        titleLabel.setFont(headFont);
+        usernameLabel.setFont(customFont);
+        passwordLabel.setFont(customFont);
+        conPassLabel.setFont(customFont);
+        registerBtn.setFont(buttonFont);
+        noAccLabel.setFont(textFont);
+        signInLabel.setFont(textFont);
+
+        titleLabel.setForeground(Color.WHITE);
+        usernameLabel.setForeground(Color.WHITE);
+        passwordLabel.setForeground(Color.WHITE);
+        conPassLabel.setForeground(Color.WHITE);
+        registerBtn.setForeground(Color.WHITE);
+        registerBtn.setBackground(Color.GREEN);
+        noAccLabel.setForeground(Color.WHITE);
+        signInLabel.setForeground(Color.CYAN);
+        // signUpLabel.setBackground(new Color(173, 216, 230));
+        // signUpLabel.setOpaque(true);
+
+        titleLabel.setBounds(300, 80, 250, 50);
+        usernameLabel.setBounds(220, 170, 200, 50);
+        usernameField.setBounds(350, 182, 240, 24);
+        passwordLabel.setBounds(220, 215, 200, 50);
+        passwordField.setBounds(350, 227, 240, 24);
+        conPassLabel.setBounds(155, 260, 200, 50);
+        conPassField.setBounds(350, 272, 240, 24);
+        registerBtn.setBounds(405, 305, 185, 35);
+        noAccLabel.setBounds(340, 350, 50, 15);
+        signInLabel.setBounds(370, 350, 70, 15);
+
+        mainLayer.add(titleLabel, Integer.valueOf(1));
+        mainLayer.add(usernameLabel, Integer.valueOf(1));
+        mainLayer.add(usernameField, Integer.valueOf(1));
+        mainLayer.add(passwordLabel, Integer.valueOf(1));
+        mainLayer.add(passwordField, Integer.valueOf(1));
+        mainLayer.add(conPassLabel, Integer.valueOf(1));
+        mainLayer.add(conPassField, Integer.valueOf(1));
+        mainLayer.add(registerBtn, Integer.valueOf(1));
+        mainLayer.add(noAccLabel, Integer.valueOf(1));
+        mainLayer.add(signInLabel, Integer.valueOf(1));
+
+        this.setContentPane(mainLayer);
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void addListeners() {
+        signInLabel.addMouseListener(new SignUpLabelListener(signInLabel));
 
-        usernameReg = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        Register = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        passwordReg = new javax.swing.JPasswordField();
-        Cpassword = new javax.swing.JPasswordField();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel4.setText("Password");
-
-        Register.setBackground(new java.awt.Color(0, 255, 0));
-        Register.setForeground(new java.awt.Color(255, 255, 255));
-        Register.setText("Register");
-        Register.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RegisterActionPerformed(evt);
-            }
-        });
-
-        jLabel5.setText("already have an account?");
-
-        jButton2.setForeground(new java.awt.Color(51, 255, 0));
-        jButton2.setText("login here");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel6.setText("Confirm Password");
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(51, 255, 0));
-        jLabel1.setText("Register");
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel2.setText("Please, enter your detail");
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel3.setText("Username");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(87, 87, 87)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(Cpassword, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(passwordReg, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(usernameReg, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(Register, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)))
-                .addContainerGap(79, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(usernameReg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(passwordReg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
-                .addGap(5, 5, 5)
-                .addComponent(Cpassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(Register)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        System.out.println("Login");
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void RegisterActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_RegisterActionPerformed
-        String nama, password, query;
-        int score = 0, count = 0;
-
-        try {
-            Class.forName(MYSQL_JDBC_DRIVER_CLASS);
-            Connection con = DriverManager.getConnection(MYSQL_DB_URL, MYSQL_DB_USER, MYSQL_DB_USER_PASSWORD);
-            Statement st = con.createStatement();
-            String user = usernameReg.getText();
-            ResultSet rs1 = st.executeQuery("SELECT nama FROM player");
-            while (rs1.next()) {
-                if (user.equals(rs1.getString(1))) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Username Sudah Terdaftar", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
+        registerBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String inputUsername = usernameField.getText();
+                char[] inputPasswordChars = passwordField.getPassword();
+                char[] inputCPasswordChars = conPassField.getPassword();
+                String inputPassword = new String(inputPasswordChars);
+                String inputCPassword = new String(inputCPasswordChars);
+            
+                int userId = getUserId(inputUsername, inputPassword, inputCPassword);
+            
+                if (userId != -1) {
+                    String username = getUsernameById(userId);
+            
+                    LoginManage loginManage = new LoginManage();
+                    loginManage.login(userId, username);
+                    
+                    JOptionPane.showMessageDialog(Register.this,
+                            "Login Berhasil!",
+                            "Login Successful", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    runMainMenu();
+                } else {
+                    JOptionPane.showMessageDialog(Register.this,
+                            "Login Gagal!",
+                            "Login Failed", JOptionPane.WARNING_MESSAGE);
                 }
             }
-            if ("".equals(usernameReg.getText())) {
-                JOptionPane.showMessageDialog(new JFrame(), "Username cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if ("".equals(passwordReg.getText())) {
-                JOptionPane.showMessageDialog(new JFrame(), "Password cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if ("".equals(Cpassword.getText())) {
-                JOptionPane.showMessageDialog(new JFrame(), "Confirm Password cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (!passwordReg.getText().equals(Cpassword.getText())) {
-                JOptionPane.showMessageDialog(new JFrame(), "Password and Confirm Password is not same", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                nama = usernameReg.getText();
-                password = passwordReg.getText();
-                query = "INSERT INTO player(nama, password, score, play_count)" + " VALUES ('" + nama + "', '" + password + "', '" + score + "', '" + count + "')";
-                st.execute(query);
-                usernameReg.setText("");
-                passwordReg.setText("");
-                Cpassword.setText("");
-                JOptionPane.showMessageDialog(new JFrame(), "Register Success", "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch (Exception e) {
-            System.out.println("Error!" + e.getMessage());
-        }
 
-    }// GEN-LAST:event_RegisterActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-        // (optional) ">
-        /*
-         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-         * look and feel.
-         * For details see
-         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+            private int getUserId(String username, String password, String Confirm) {
+                try {
+                    Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+                    String query = "SELECT id FROM user WHERE username = ? AND password = ?";
+                    try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        preparedStatement.setString(1, username);
+                        preparedStatement.setString(2, password);
+            
+                        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                            return resultSet.next() ? resultSet.getInt("id") : -1;
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return -1;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        // </editor-fold>
+            
+            private String getUsernameById(int userId) {
+                try {
+                    Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+                    String query = "SELECT username FROM user WHERE id = ?";
+                    try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        preparedStatement.setInt(1, userId);
+            
+                        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                            return resultSet.next() ? resultSet.getString("username") : null;
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Register().setVisible(true);
+            private void runMainMenu(){
+                Register.this.dispose();
+                MainMenu app = new MainMenu();
+                app.setVisible(true);
             }
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPasswordField Cpassword;
-    private javax.swing.JButton Register;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JPasswordField passwordReg;
-    private javax.swing.JTextField usernameReg;
-    // End of variables declaration//GEN-END:variables
+    public static void main(String[] args) {
+        Register f = new Register();
+        f.setVisible(true);
+    }
+}
+
+class SignUpLabelListener extends MouseAdapter {
+    private JLabel label;
+
+    public SignUpLabelListener(JLabel label) {
+        this.label = label;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // Implement your sign-up label action here
+        System.out.println("Sign In label clicked");
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        setHandCursor(label);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        setDefaultCursor(label);
+    }
+
+    private void setHandCursor(JLabel label) {
+        label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    private void setDefaultCursor(JLabel label) {
+        label.setCursor(Cursor.getDefaultCursor());
+    }
 }
