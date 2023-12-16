@@ -1,16 +1,19 @@
 package src.view;
 
-// import src.controller.GameListener;
+import src.controller.GameListener;
+import src.view.GamePanel;
+import src.controller.Score;
 import javax.swing.*;
 import src.controller.CustomFont;
+import src.controller.TimerLabel;
 import src.controller.LabelMouseListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-// public class MainMenu extends JFrame implements GameListener{
-public class MainMenu extends JFrame {
+public class MainFrame extends JFrame implements GameListener{
     private JLayeredPane mainLayer;
     private JLabel background;
     private JLabel newGameLabel;
@@ -18,11 +21,36 @@ public class MainMenu extends JFrame {
     private JLabel exitLabel;
     private ImageIcon userAccount;
     private JLabel userAccountLabel;
+    private GamePanel gamePanel;
+    private FinishPanel finishPanel;
+    private TimerLabel timerLabel;
+    private Score score;
 
-    public MainMenu() {
+    public MainFrame() {
         initFrame();
         addListeners();
+
+        finishPanel = new FinishPanel(this);
+        score = new Score(finishPanel);
+        gamePanel = new GamePanel(this, finishPanel);        
+        timerLabel = new TimerLabel(this);
     }
+
+    // public MainFrame(){
+    //     initFinish();
+    // }
+    // private void initFinish(){
+    //     this.setTitle("Duck Hunt");
+    //     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //     this.setResizable(false);
+    //     this.setSize(new Dimension(800, 600));
+    //     this.setLocationRelativeTo(null);
+
+    //     mainLayer = new JLayeredPane();
+
+    //     FinishPanel f = new FinishPanel();
+    //     this.setContentPane(f);
+    // }
 
     private void initFrame() {
         this.setTitle("Duck Hunt");
@@ -78,13 +106,43 @@ public class MainMenu extends JFrame {
 
     private void addListeners() {
         userAccountLabel.addMouseListener(new LabelMouseListener(userAccountLabel));
-        newGameLabel.addMouseListener(new LabelMouseListener(newGameLabel));
         highscoreLabel.addMouseListener(new LabelMouseListener(highscoreLabel));
         exitLabel.addMouseListener(new LabelMouseListener(exitLabel));
+        newGameLabel.addMouseListener(new LabelMouseListener(newGameLabel, this));
+    }
+
+    public void swapToGamePanel() {
+        setContentPane(gamePanel);
+        revalidate();
+        repaint();
+    }
+
+    public void swapToFinishPanel(){
+        System.out.println("Swap to Finish");
+        setContentPane(finishPanel);
+        revalidate();
+        repaint();
+    }
+
+    @Override
+    public void endGame() {
+        System.out.println("EndGame MainFrame");
+        swapToFinishPanel();
+    }
+
+    @Override
+    public void startGame(){
+        gamePanel.startGame();
+    }
+
+    @Override
+    public void onScoreChanged(int newScore) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'onScoreChanged'");
     }
     
     public static void main(String[] args) {
-        MainMenu f = new MainMenu();
+        MainFrame f = new MainFrame();
         f.setVisible(true);
     }
 }
