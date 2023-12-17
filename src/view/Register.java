@@ -16,7 +16,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 public class Register extends JFrame {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/duckhunt_db";
@@ -34,14 +33,9 @@ public class Register extends JFrame {
     private JButton registerBtn;
     private JLabel noAccLabel;
     private JLabel signInLabel;
-
-    private Login login;
-
     public Register(){
         initFrame();
         addListeners();
-
-        login = new Login();
     }
     private void initFrame(){
         this.setTitle("Duck Hunt");
@@ -107,11 +101,11 @@ public class Register extends JFrame {
         usernameField.setBounds(350, 182, 240, 24);
         passwordLabel.setBounds(220, 215, 200, 50);
         passwordField.setBounds(350, 227, 240, 24);
-        conPassLabel.setBounds(117, 260, 280, 50);
+        conPassLabel.setBounds(155, 260, 200, 50);
         conPassField.setBounds(350, 272, 240, 24);
-        registerBtn.setBounds(390, 310, 200, 35);
-        noAccLabel.setBounds(340, 370, 50, 15);
-        signInLabel.setBounds(370, 370, 70, 15);
+        registerBtn.setBounds(405, 305, 185, 35);
+        noAccLabel.setBounds(340, 350, 50, 15);
+        signInLabel.setBounds(370, 350, 70, 15);
 
         mainLayer.add(titleLabel, Integer.valueOf(1));
         mainLayer.add(usernameLabel, Integer.valueOf(1));
@@ -128,76 +122,79 @@ public class Register extends JFrame {
     }
 
     private void addListeners() {
-        signInLabel.addMouseListener(new SignInLabelListener(this, signInLabel));
+        signInLabel.addMouseListener(new SignUpLabelListener(signInLabel));
+
         registerBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                performRegistration();
+                String inputUsername = usernameField.getText();
+                char[] inputPasswordChars = passwordField.getPassword();
+                char[] inputCPasswordChars = conPassField.getPassword();
+                String inputPassword = new String(inputPasswordChars);
+                String inputCPassword = new String(inputCPasswordChars);
+            
+                int userId = getUserId(inputUsername, inputPassword, inputCPassword);
+            
+                if (userId != -1) {
+                    String username = getUsernameById(userId);
+            
+                    LoginManage loginManage = new LoginManage();
+                    loginManage.login(userId, username);
+                    
+                    JOptionPane.showMessageDialog(Register.this,
+                            "Login Berhasil!",
+                            "Login Successful", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    runMainMenu();
+                } else {
+                    JOptionPane.showMessageDialog(Register.this,
+                            "Login Gagal!",
+                            "Login Failed", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
+            private int getUserId(String username, String password, String Confirm) {
+                try {
+                    Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+                    String query = "SELECT id FROM user WHERE username = ? AND password = ? AND Confirm = ?";
+                    try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        preparedStatement.setString(1, username);
+                        preparedStatement.setString(2, password);
+                        preparedStatement.setString(3, Confirm);
+            
+                        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                            return resultSet.next() ? resultSet.getInt("id") : -1;
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return -1;
+                }
+            }
+            
+            private String getUsernameById(int userId) {
+                try {
+                    Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+                    String query = "SELECT username FROM user WHERE id = ?";
+                    try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        preparedStatement.setInt(1, userId);
+            
+                        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                            return resultSet.next() ? resultSet.getString("username") : null;
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            private void runMainMenu(){
+                Register.this.dispose();
+                MainMenu app = new MainMenu();
+                app.setVisible(true);
             }
         });
-    }
-
-    private void performRegistration() {
-        String inputUsername = usernameField.getText();
-        char[] inputPasswordChars = passwordField.getPassword();
-        char[] inputCPasswordChars = conPassField.getPassword();
-        String inputPassword = new String(inputPasswordChars);
-        String inputCPassword = new String(inputCPasswordChars);
-
-        if (Arrays.equals(inputPasswordChars, inputCPasswordChars)) {
-            if (registerUser(inputUsername, inputPassword)) {
-                JOptionPane.showMessageDialog(Register.this,
-                        "Registrasi Berhasil!",
-                        "Registration Successful", JOptionPane.INFORMATION_MESSAGE);
-                        swapToLogin();
-            } else {
-                JOptionPane.showMessageDialog(Register.this,
-                        "Registrasi Gagal!",
-                        "Registration Failed", JOptionPane.WARNING_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(Register.this,
-                    "Password dan Confirm Password tidak sama!",
-                    "Registration Failed", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
-    private boolean registerUser(String username, String password) {
-        try {
-            Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
-            int maxUserId = getMaxUserId(connection);
-            int newUserId = maxUserId + 1;
-            String query = "INSERT INTO user (id, username, password) VALUES (?, ?, ?)";
-
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setInt(1, newUserId);
-                preparedStatement.setString(2, username);
-                preparedStatement.setString(3, password);
-    
-                int affectedRows = preparedStatement.executeUpdate();
-                return affectedRows > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private int getMaxUserId(Connection connection) throws SQLException {
-        String maxIdQuery = "SELECT MAX(id) as max_id FROM user";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(maxIdQuery);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            if (resultSet.next()) {
-                return resultSet.getInt("max_id");
-            }
-        }
-        return -1;
-    }
-
-    private void swapToLogin(){
-        this.dispose();
-        login = new Login();
-        login.setVisible(true);
     }
 
     public static void main(String[] args) {
@@ -206,23 +203,17 @@ public class Register extends JFrame {
     }
 }
 
-class SignInLabelListener extends MouseAdapter {
+class SignUpLabelListener extends MouseAdapter {
     private JLabel label;
-    private Login login;
-    private Register register;
 
-    public SignInLabelListener(Register regis, JLabel label) {
-        this.register = regis;
+    public SignUpLabelListener(JLabel label) {
         this.label = label;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        // Implement your sign-up label action here
         System.out.println("Sign In label clicked");
-
-        register.dispose();
-        login = new Login();
-        login.setVisible(true);
     }
 
     @Override
