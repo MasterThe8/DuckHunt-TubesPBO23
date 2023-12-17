@@ -34,16 +34,12 @@ public class GamePanel extends JPanel implements MouseMotionListener, ActionList
     private Score scoreLabel;
     private TimerLabel timerLabel;
     private FinishPanel finishPanel;
-    private int tempScore;
 
-    public GamePanel(MainFrame mainFrame, FinishPanel finishPanel) {
-        initFrame();
-
+    public GamePanel(MainFrame mainFrame, FinishPanel finishPanel, Score scoreLabel) {
         this.main = mainFrame;
-
         this.finishPanel = finishPanel;
-
-        scoreLabel.addScoreListener(finishPanel);
+        this.scoreLabel = scoreLabel;
+        scoreLabel.addScoreListener(this);
 
         Timer timer = new Timer(10, this);
         timer.start();
@@ -67,6 +63,8 @@ public class GamePanel extends JPanel implements MouseMotionListener, ActionList
                 }
             }
         });
+
+        initFrame();
     }
 
     private void initFrame() {
@@ -89,7 +87,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, ActionList
             e.printStackTrace();
         }
 
-        scoreLabel = new Score(finishPanel);
+        // scoreLabel = new Score(finishPanel);
         add(scoreLabel.getScoreLabel());
 
         timerLabel = new TimerLabel(this);
@@ -165,10 +163,6 @@ public class GamePanel extends JPanel implements MouseMotionListener, ActionList
         this.finishPanel = finishPanel;
     }
 
-    public void setTempScore(int score){
-        tempScore = score;
-    }
-
     @Override
     public void startGame() {
         Thread gunThread = new Thread();
@@ -193,9 +187,13 @@ public class GamePanel extends JPanel implements MouseMotionListener, ActionList
 
     @Override
     public void onScoreChanged(int newScore) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'onScoreChanged'");
+        SwingUtilities.invokeLater(() -> {
+            scoreLabel.getScoreLabel().setText("Score: " + newScore);
+        });
     }
 
-    
+    @Override
+    public void onTimerChanged(int timer) {
+        
+    }
 }

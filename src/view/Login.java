@@ -114,9 +114,9 @@ public class Login extends JFrame {
     }
 
     private void addListeners() {
-        signUpLabel.addMouseListener(new SignUpLabelListener(signUpLabel));
-
+        signUpLabel.addMouseListener(new SignUpLabelListener(this, signUpLabel));
         loginBtn.addActionListener(new ActionListener() {
+            
             @Override
             public void actionPerformed(ActionEvent e) {
                 String inputUsername = usernameField.getText();
@@ -128,8 +128,8 @@ public class Login extends JFrame {
                 if (userId != -1) {
                     String username = getUsernameById(userId);
             
-                    LoginManage loginManage = new LoginManage();
-                    loginManage.login(userId, username);
+                    LoginSession logSession = new LoginSession();
+                    logSession.login(userId, username);
                     
                     JOptionPane.showMessageDialog(Login.this,
                             "Login Berhasil!",
@@ -194,15 +194,21 @@ public class Login extends JFrame {
 
 class SignUpLabelListener extends MouseAdapter {
     private JLabel label;
+    private Login login;
+    private Register register;
 
-    public SignUpLabelListener(JLabel label) {
+    public SignUpLabelListener(Login log, JLabel label) {
+        this.login = log;
         this.label = label;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // Implement your sign-up label action here
         System.out.println("Sign Up label clicked");
+        login.dispose();
+
+        register = new Register();
+        register.setVisible(true);
     }
 
     @Override

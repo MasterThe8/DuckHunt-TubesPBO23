@@ -7,13 +7,18 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import src.view.GamePanel;
+import src.view.Highscore;
 import src.view.MainFrame;
+import src.view.Profile;
 
 public class LabelMouseListener implements MouseListener {
     private JLabel label;
     private MainFrame mainFrame;
     private GamePanel gamePanel;
+    private Highscore highscore;
+    private Profile profilePanel;
     private TimerLabel timerLabel;
+    private GameListener gameListener;
     private JButton btn;
 
     public LabelMouseListener(JLabel label, MainFrame mainFrame) {
@@ -36,7 +41,7 @@ public class LabelMouseListener implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         handleMouseClicked();
-    }
+    }   
 
     @Override
     public void mousePressed(MouseEvent e) {}
@@ -81,6 +86,11 @@ public class LabelMouseListener implements MouseListener {
 
     private void showHighscore() {
         System.out.println("Showing Highscore...");
+        if (mainFrame != null) {
+            mainFrame.swapToHighscore();
+        } else {
+            System.out.println("mainFrame is null");
+        }
     }
 
     private void exitGame() {

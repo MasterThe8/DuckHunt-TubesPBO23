@@ -15,7 +15,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Duck implements Runnable{
+public class Duck extends Shooting implements Runnable{
     private static final int START_Y_COORDINATE = 0;
     private static final int END_Y_COORDINATE = 390;
     private static final int NUMBER_OF_FRAMES = 2;
@@ -41,6 +41,8 @@ public class Duck implements Runnable{
 
         isShot = false;
         loadShotFrames();
+
+        super.shoot();
 
         duckSound = new SoundPlayer();
     }
@@ -157,6 +159,7 @@ public class Duck implements Runnable{
         return isShot;
     }
 
+    @Override
     public void shoot() {
         isShot = true;
         duckSound.playSound(duckSoundPath);

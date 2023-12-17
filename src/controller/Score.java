@@ -46,11 +46,13 @@ public class Score {
 
     public void increaseScore() {
         score = score + 10;
+        System.out.println("Score:"+score);
         updateScoreLabel();
         notifyScoreChanged();
     }
 
     private void updateScoreLabel() {
+        System.out.println("updateScoreLabel");
         SwingUtilities.invokeLater(() -> scoreLabel.setText("Score: " + score));
     }
 
@@ -62,7 +64,11 @@ public class Score {
         return score;
     }
 
+    public void setText(String string) {
+    }
+
     public void resetScore(){
         score = 0;
+        notifyScoreChanged();
     }
 }
