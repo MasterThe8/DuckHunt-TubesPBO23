@@ -1,12 +1,14 @@
 package src.controller;
 
-public class LoginManage {
+public class LoginSession {
     private static int id;
     private static String username;
 
     public void login(int id, String username) {
         this.id = id;
         this.username = username;
+
+        System.out.println("User: " + getId() + " | " +  getUsername() + " Saved!");
     }
 
     public static void logout() {

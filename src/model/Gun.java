@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import src.view.GamePanel;
 import src.controller.SoundPlayer;
 
-public class Gun implements Runnable {
+public class Gun extends Shooting implements Runnable {
     private Image bullet;
     private int ammo = 3;
     private SoundPlayer shootAudio;
@@ -19,6 +19,7 @@ public class Gun implements Runnable {
 
     public Gun() {
         showBullet();
+        super.shoot();
         shootAudio = new SoundPlayer();
     }
 
@@ -38,6 +39,7 @@ public class Gun implements Runnable {
         }
     }
 
+    @Override
     public void shoot() {
         if (ammo > 0) {
             System.out.println("Shoot!");

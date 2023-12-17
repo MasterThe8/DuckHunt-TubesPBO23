@@ -9,11 +9,16 @@ import src.controller.TimerLabel;
 import src.controller.LabelMouseListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
-public class MainFrame extends JFrame implements GameListener{
+public class MainFrame extends JFrame implements GameListener {
+    private JDialog loadingDialog;
     private JLayeredPane mainLayer;
     private JLabel background;
     private JLabel newGameLabel;
@@ -22,7 +27,9 @@ public class MainFrame extends JFrame implements GameListener{
     private ImageIcon userAccount;
     private JLabel userAccountLabel;
     private GamePanel gamePanel;
+    private Highscore highscorePanel;
     private FinishPanel finishPanel;
+    private Profile profilePanel;
     private TimerLabel timerLabel;
     private Score score;
 
@@ -30,27 +37,13 @@ public class MainFrame extends JFrame implements GameListener{
         initFrame();
         addListeners();
 
-        finishPanel = new FinishPanel(this);
         score = new Score(finishPanel);
-        gamePanel = new GamePanel(this, finishPanel);        
+        finishPanel = new FinishPanel(this, score);
+        gamePanel = new GamePanel(this, finishPanel, score);
         timerLabel = new TimerLabel(this);
+        highscorePanel = new Highscore(this);
+        profilePanel = new Profile(this);
     }
-
-    // public MainFrame(){
-    //     initFinish();
-    // }
-    // private void initFinish(){
-    //     this.setTitle("Duck Hunt");
-    //     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    //     this.setResizable(false);
-    //     this.setSize(new Dimension(800, 600));
-    //     this.setLocationRelativeTo(null);
-
-    //     mainLayer = new JLayeredPane();
-
-    //     FinishPanel f = new FinishPanel();
-    //     this.setContentPane(f);
-    // }
 
     private void initFrame() {
         this.setTitle("Duck Hunt");
@@ -59,7 +52,6 @@ public class MainFrame extends JFrame implements GameListener{
         this.setSize(new Dimension(800, 600));
         this.setLocationRelativeTo(null);
         Font customFont = CustomFont.loadFont(32);
-
         mainLayer = new JLayeredPane();
 
         try {
@@ -73,6 +65,14 @@ public class MainFrame extends JFrame implements GameListener{
         userAccount = new ImageIcon("resources\\images\\accountIcon.png");
         userAccountLabel = new JLabel(userAccount);
         userAccountLabel.setBounds(715, 5, userAccount.getIconWidth(), userAccount.getIconHeight());
+
+        userAccountLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("Profile Icon Clicked!");
+                swapToProfile();
+            }
+        });
 
         newGameLabel = new JLabel("New Game");
         newGameLabel.setFont(customFont);
@@ -99,20 +99,32 @@ public class MainFrame extends JFrame implements GameListener{
         this.setContentPane(mainLayer);
     }
 
-    // @Override
-    // public void gameIsFinished(){
-    //     goBackAction.setEnabled(true);
-    // }
-
     private void addListeners() {
-        userAccountLabel.addMouseListener(new LabelMouseListener(userAccountLabel));
-        highscoreLabel.addMouseListener(new LabelMouseListener(highscoreLabel));
+        highscoreLabel.addMouseListener(new LabelMouseListener(highscoreLabel, this));
         exitLabel.addMouseListener(new LabelMouseListener(exitLabel));
         newGameLabel.addMouseListener(new LabelMouseListener(newGameLabel, this));
     }
 
     public void swapToGamePanel() {
         setContentPane(gamePanel);
+        revalidate();
+        repaint();
+    }
+
+    public void swapToHighscore(){
+        setContentPane(highscorePanel);
+        revalidate();
+        repaint();
+    }
+
+    public void swapToMainPanel(){
+        setContentPane(mainLayer);
+        revalidate();
+        repaint();
+    }
+
+    public void swapToProfile(){
+        setContentPane(profilePanel);
         revalidate();
         repaint();
     }
@@ -128,6 +140,7 @@ public class MainFrame extends JFrame implements GameListener{
     public void endGame() {
         System.out.println("EndGame MainFrame");
         swapToFinishPanel();
+        finishPanel.runUpdateScore();
     }
 
     @Override
@@ -137,12 +150,25 @@ public class MainFrame extends JFrame implements GameListener{
 
     @Override
     public void onScoreChanged(int newScore) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'onScoreChanged'");
     }
     
     public static void main(String[] args) {
         MainFrame f = new MainFrame();
         f.setVisible(true);
+    }
+
+    @Override
+    public void onTimerChanged(int timer) {
+        throw new UnsupportedOperationException("Unimplemented method 'onTimerChanged'");
+    }
+
+    public void resetProgram(){
+        dispose();
+
+        SwingUtilities.invokeLater(() -> {
+            MainFrame newFrame = new MainFrame();
+            newFrame.setVisible(true);
+        });
     }
 }

@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class CustomFont {
-
     private static final String FONT_PATH = "resources\\font\\m29.TTF";
 
     static {

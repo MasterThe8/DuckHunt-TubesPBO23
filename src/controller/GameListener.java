@@ -4,4 +4,5 @@ public interface GameListener {
     void startGame();
     void endGame();
     void onScoreChanged(int newScore);
+    void onTimerChanged(int timer);
 }

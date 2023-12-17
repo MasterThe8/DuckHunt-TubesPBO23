@@ -25,8 +25,8 @@ public class TimerLabel implements Runnable {
         timerLabel.setFont(customFont);
         timerLabel.setForeground(Color.WHITE);
         timerLabel.setBounds(700, 510, 260, 50);
-        // seconds = 60;
-        seconds = 10;
+        seconds = 60;
+        // seconds = 10;
     }
 
     public JLabel getTimerLabel() {
@@ -34,16 +34,21 @@ public class TimerLabel implements Runnable {
     }
 
     private void updateTimerText(String text) {
-        SwingUtilities.invokeLater(() -> timerLabel.setText(text));
+        System.out.println("Updating timer text: " + text);
+        SwingUtilities.invokeLater(() -> {
+            System.out.println("Setting text on EDT");
+            timerLabel.setText(text);
+        });
     }
+    
 
-    public void gameFinish(){
-        System.out.println("Finish cuy");       
+    public void gameFinish() {
+        System.out.println("Finish cuy");
     }
 
     @Override
     public void run() {
-        while (seconds >= 0) {
+        while (seconds >= 0 && !stopped) { 
             updateTimerText(String.format("%02d", seconds));
 
             try {
@@ -51,19 +56,28 @@ public class TimerLabel implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            
-            if (seconds == 10) {
-                seconds = 9;
+
+            if (seconds == 60) {
+                seconds = 59;
             } else {
                 seconds--;
             }
         }
-        gameFinish();
-        gameListener.endGame();
-    }    
 
-    public void stop(){
+        if (!stopped) {
+            gameFinish();
+            gameListener.endGame();
+        }
+    }
+
+    public void reset() {
+        stopped = false;
+        seconds = 60;
+    }
+
+    public void stop() {
         System.out.println("Thread Timer Stopped");
         stopped = true;
     }
 }
+
