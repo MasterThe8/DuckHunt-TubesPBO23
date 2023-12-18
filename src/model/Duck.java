@@ -42,8 +42,6 @@ public class Duck extends Shooting implements Runnable{
         isShot = false;
         loadShotFrames();
 
-        super.shoot();
-
         duckSound = new SoundPlayer();
     }
 
@@ -139,7 +137,7 @@ public class Duck extends Shooting implements Runnable{
             try {
                 animationFrames[i] = ImageIO.read(new File("resources\\images\\duckRight" + i + ".png"));
             } catch (IOException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
             }
         }
     }
@@ -150,7 +148,7 @@ public class Duck extends Shooting implements Runnable{
             try {
                 shotFrames[i] = ImageIO.read(new File("resources\\images\\duckPrecipitate" + i + ".png"));
             } catch (IOException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
             }
         }
     }

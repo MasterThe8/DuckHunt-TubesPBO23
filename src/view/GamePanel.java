@@ -135,20 +135,18 @@ public class GamePanel extends JPanel implements MouseMotionListener, ActionList
         int ammo = gun.getAmmo();
 
         if (ammo != 0){
-        for (Duck duck : ducks) {
-            if (duck.getBounds().contains(x, y)) {
-                duck.shoot();
-                scoreLabel.increaseScore();
-                break;
+            for (Duck duck : ducks) {
+                if (duck.getBounds().contains(x, y)) {
+                    duck.shoot();
+                    scoreLabel.increaseScore();
+                    break;
+                }
             }
-        }
-
-        gun.shoot();
-        repaint();
+            gun.shoot();
+            repaint();
         } else {
             System.out.println("NO AMMO!");
         }
-
     }
 
     @Override

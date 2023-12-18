@@ -116,7 +116,6 @@ public class Login extends JFrame {
     private void addListeners() {
         signUpLabel.addMouseListener(new SignUpLabelListener(this, signUpLabel));
         loginBtn.addActionListener(new ActionListener() {
-            
             @Override
             public void actionPerformed(ActionEvent e) {
                 String inputUsername = usernameField.getText();

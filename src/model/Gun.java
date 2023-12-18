@@ -19,7 +19,6 @@ public class Gun extends Shooting implements Runnable {
 
     public Gun() {
         showBullet();
-        super.shoot();
         shootAudio = new SoundPlayer();
     }
 

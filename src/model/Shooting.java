@@ -1,5 +1,5 @@
 package src.model;
 
 abstract class Shooting {
-    void shoot(){}
+    abstract void shoot();
 }

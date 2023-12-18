@@ -100,9 +100,9 @@ public class MainFrame extends JFrame implements GameListener {
     }
 
     private void addListeners() {
+        newGameLabel.addMouseListener(new LabelMouseListener(newGameLabel, this));
         highscoreLabel.addMouseListener(new LabelMouseListener(highscoreLabel, this));
         exitLabel.addMouseListener(new LabelMouseListener(exitLabel));
-        newGameLabel.addMouseListener(new LabelMouseListener(newGameLabel, this));
     }
 
     public void swapToGamePanel() {
@@ -149,19 +149,10 @@ public class MainFrame extends JFrame implements GameListener {
     }
 
     @Override
-    public void onScoreChanged(int newScore) {
-        throw new UnsupportedOperationException("Unimplemented method 'onScoreChanged'");
-    }
-    
-    public static void main(String[] args) {
-        MainFrame f = new MainFrame();
-        f.setVisible(true);
-    }
+    public void onScoreChanged(int newScore) {}
 
     @Override
-    public void onTimerChanged(int timer) {
-        throw new UnsupportedOperationException("Unimplemented method 'onTimerChanged'");
-    }
+    public void onTimerChanged(int timer) {}
 
     public void resetProgram(){
         dispose();
@@ -170,5 +161,10 @@ public class MainFrame extends JFrame implements GameListener {
             MainFrame newFrame = new MainFrame();
             newFrame.setVisible(true);
         });
+    }
+
+    public static void main(String[] args) {
+        MainFrame f = new MainFrame();
+        f.setVisible(true);
     }
 }

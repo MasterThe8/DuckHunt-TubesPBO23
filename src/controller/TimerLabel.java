@@ -25,8 +25,8 @@ public class TimerLabel implements Runnable {
         timerLabel.setFont(customFont);
         timerLabel.setForeground(Color.WHITE);
         timerLabel.setBounds(700, 510, 260, 50);
-        seconds = 60;
-        // seconds = 10;
+        // seconds = 60;
+        seconds = 10;
     }
 
     public JLabel getTimerLabel() {
@@ -57,8 +57,8 @@ public class TimerLabel implements Runnable {
                 e.printStackTrace();
             }
 
-            if (seconds == 60) {
-                seconds = 59;
+            if (seconds == 10) {
+                seconds = 9;
             } else {
                 seconds--;
             }
@@ -72,7 +72,8 @@ public class TimerLabel implements Runnable {
 
     public void reset() {
         stopped = false;
-        seconds = 60;
+        // seconds = 60;
+        seconds = 10;
     }
 
     public void stop() {
